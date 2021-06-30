@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,11 +13,11 @@ namespace calc
     public partial class Form1 : Form
     {
 
-        float argument_one=0;
+        double argument_one=0;
 
-        float argument_two;
+        double argument_two;
 
-        float result;
+        double result;
 
         string operation;
 
@@ -34,12 +34,6 @@ namespace calc
         {
             if (textBox1.Text != "0") textBox1.Text = textBox1.Text + 7;
         }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-
         private void button2_Click(object sender, EventArgs e)
         {
             if (textBox1.Text != "0") textBox1.Text = textBox1.Text + 8;
@@ -95,42 +89,22 @@ namespace calc
         }
 
 
-        private void calculate()
-        {
-            switch (operation)
-            {
-                case "plus":
-                    result = argument_one + argument_two;
-                    textBox1.Text = result.ToString();
-                    break;
-                case "minus":
-                    result = argument_one - argument_two;
-                    textBox1.Text = result.ToString();
-                    break;
-                case "multiply":
-                    result = argument_one * argument_two;
-                    textBox1.Text = result.ToString();
-                    break;
-                case "split":
-                    result = argument_one / argument_two;
-                    textBox1.Text = result.ToString();
-                    break;
-                case "operation 1/X":
-                    result = 1 / argument_one;
-                    textBox1.Text = result.ToString();
-                    break;
-                case "operation X^(1/Y)":
-                    //result = argument_one / argument_one;
-                    textBox1.Text = result.ToString();
-                    break;
-            }
-        }
-
-
         private void button14_Click(object sender, EventArgs e)    //  =
         {
-            if (textBox1.Text != "") argument_two = float.Parse(textBox1.Text);
-            calculate();
+            if (textBox1.Text != "")
+            {
+                argument_two = Double.Parse(textBox1.Text);
+                ITwoArgumentsCalculator calculator = TwoArgumentsFactory.CreateCalculator(operation);
+                result = calculator.Calculate(argument_one, argument_two);
+            }
+            else
+            {
+                IOneArgumentsCalculator calculator = OneArgumentsFactory.CreateCalculator(operation);
+                result = calculator.Calculate(argument_one);
+            }
+
+
+            textBox1.Text = result.ToString();
             dot = false;
         }
 
@@ -138,7 +112,7 @@ namespace calc
         {
             if (textBox1.Text != "" && textBox1.Text !="-")
             {
-                argument_one = float.Parse(textBox1.Text);
+                argument_one = Double.Parse(textBox1.Text);
                 textBox1.Clear();
                 operation = "plus";
             }
@@ -149,7 +123,7 @@ namespace calc
         {
             if (textBox1.Text != "" && textBox1.Text != "-")
             {
-                argument_one = float.Parse(textBox1.Text);
+                argument_one = Double.Parse(textBox1.Text);
                 textBox1.Clear();
                 operation = "minus";
             }
@@ -160,7 +134,7 @@ namespace calc
         {
             if (textBox1.Text != "" && textBox1.Text != "-")
             {
-                argument_one = float.Parse(textBox1.Text);
+                argument_one = Double.Parse(textBox1.Text);
                 textBox1.Clear();
                 operation = "multiply";
             }
@@ -171,7 +145,7 @@ namespace calc
         {
             if (textBox1.Text != "" && textBox1.Text != "-")
             {
-                argument_one = float.Parse(textBox1.Text);
+                argument_one = Double.Parse(textBox1.Text);
                 textBox1.Clear();
                 operation = "split";
             }
@@ -182,7 +156,7 @@ namespace calc
         {
             if (textBox1.Text != "" && textBox1.Text != "-")
             {
-                argument_one = float.Parse(textBox1.Text);
+                argument_one = Double.Parse(textBox1.Text);
                 textBox1.Clear();
                 operation = "operation 1/X";
             }
@@ -193,7 +167,7 @@ namespace calc
         {
             if (textBox1.Text != "" && textBox1.Text != "-")
             {
-                argument_one = float.Parse(textBox1.Text);
+                argument_one = Double.Parse(textBox1.Text);
                 textBox1.Clear();
                 operation = "operation X^(1/Y)";
             }
@@ -234,13 +208,6 @@ namespace calc
                 sign = true;
             }
         }
-
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)  // защита от ввода букв 
         {
